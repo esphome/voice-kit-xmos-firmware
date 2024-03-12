@@ -137,9 +137,15 @@ void usb_audio_send(rtos_intertile_t *intertile_ctx,
     for(int ch=0; ch<CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_TX; ch++) {
         for (int i=0; i<appconfAUDIO_PIPELINE_FRAME_ADVANCE; i++) {
             if (ch < num_chans) {
-                if ( ch == 0 ) usb_audio_in_frame[i][ch] = frame_buf_ptr[i+(appconfAUDIO_PIPELINE_FRAME_ADVANCE*ch)] >> src_32_shift;
-                else usb_audio_in_frame[i][ch] = frame_buf_ptr[i+(appconfAUDIO_PIPELINE_FRAME_ADVANCE*(ch + 4))] >> src_32_shift;
+                // TEST: output proc0 and mic0
+                // if ( ch == 0 ) usb_audio_in_frame[i][ch] = frame_buf_ptr[i+(appconfAUDIO_PIPELINE_FRAME_ADVANCE*ch)] >> src_32_shift;
+                // else usb_audio_in_frame[i][ch] = frame_buf_ptr[i+(appconfAUDIO_PIPELINE_FRAME_ADVANCE*(ch + 4))] >> src_32_shift;
+
+                // TEST: output proc0 and proc1
                 // usb_audio_in_frame[i][ch] = frame_buf_ptr[i+(appconfAUDIO_PIPELINE_FRAME_ADVANCE*ch)] >> src_32_shift;
+
+                // Output 2channel proc0
+                usb_audio_in_frame[i][ch] = frame_buf_ptr[i+(appconfAUDIO_PIPELINE_FRAME_ADVANCE*0)] >> src_32_shift;
             }
         }
     }

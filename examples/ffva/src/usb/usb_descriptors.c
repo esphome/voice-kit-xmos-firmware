@@ -27,9 +27,14 @@
 #include "usb_descriptors.h"
 #include "tusb.h"
 
-#define XMOS_VID        0x20B1
-#define XCORE_VOICE_PID 0x4001
-#define XCORE_VOICE_PRODUCT_STR "XCORE-VOICE"
+// #define XMOS_VID        0x20B1
+// #define XCORE_VOICE_PID 0x4001
+// #define XCORE_VOICE_PRODUCT_STR "XCORE-VOICE"
+
+#define USB_PID         0x0019
+#define USB_VID         0x2886
+#define PRODUCT_STR     "ReSpeaker 2 Mics Array"
+#define VENDOR_STR      "Seeed Studio"
 
 //--------------------------------------------------------------------+
 // Device Descriptors
@@ -44,8 +49,8 @@ tusb_desc_device_t const desc_device = {
     .bDeviceProtocol    = TUSB_CLASS_UNSPECIFIED,
     .bMaxPacketSize0    = CFG_TUD_ENDPOINT0_SIZE,
 
-    .idVendor           = XMOS_VID,
-    .idProduct          = XCORE_VOICE_PID,
+    .idVendor           = USB_VID,
+    .idProduct          = USB_PID,
     .bcdDevice          = 0x0001,
 
     .iManufacturer      = 0x01,
@@ -267,10 +272,10 @@ uint8_t const* tud_descriptor_configuration_cb(uint8_t index)
 
 // array of pointer to string descriptors
 char const *string_desc_arr[] = {(const char[]) {0x09, 0x04}, // 0: is supported language is English (0x0409)
-        "XMOS",                      // 1: Manufacturer
-        XCORE_VOICE_PRODUCT_STR,     // 2: Product
-        "123456",                    // 3: Serials, should use chip ID
-        XCORE_VOICE_PRODUCT_STR,     // 4: Audio Interface
+        VENDOR_STR,                  // 1: Manufacturer
+        PRODUCT_STR,                 // 2: Product
+        "0000000001",                // 3: Serials, should use chip ID
+        PRODUCT_STR,                 // 4: Audio Interface
         "DFU FACTORY",               // 5: DFU device
         "DFU UPGRADE",               // 6: DFU device
         "DFU DATAPARTITION",         // 7: DFU device

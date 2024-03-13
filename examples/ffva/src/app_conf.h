@@ -32,7 +32,7 @@
  * A positive delay will delay mics
  * A negative delay will delay ref
  */
-#define appconfINPUT_SAMPLES_MIC_DELAY_MS        0
+#define appconfINPUT_SAMPLES_MIC_DELAY_MS        40
 
 #ifdef appconfPIPELINE_BYPASS
 #define appconfAUDIO_PIPELINE_SKIP_STATIC_DELAY  1
@@ -68,6 +68,10 @@
 
 #ifndef appconfUSB_ENABLED
 #define appconfUSB_ENABLED         0
+#endif
+
+#ifndef appconfUSB_DFU_ONLY_ENABLED
+#define appconfUSB_DFU_ONLY_ENABLED         0
 #endif
 
 #ifndef appconfWW_ENABLED

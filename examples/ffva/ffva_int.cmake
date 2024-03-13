@@ -1,15 +1,16 @@
 
 set(FFVA_INT_COMPILE_DEFINITIONS
     ${APP_COMPILE_DEFINITIONS}
-    appconfEXTERNAL_MCLK=1
     appconfI2S_ENABLED=1
     appconfUSB_ENABLED=0
+    appconfUSB_DFU_ONLY_ENABLED=1
     appconfAEC_REF_DEFAULT=appconfAEC_REF_I2S
-    appconfI2S_MODE=appconfI2S_MODE_SLAVE
-    appconfI2S_AUDIO_SAMPLE_RATE=48000
+    appconfI2S_MODE=appconfI2S_MODE_MASTER
     
-    MIC_ARRAY_CONFIG_MCLK_FREQ=12288000
+    MIC_ARRAY_CONFIG_MCLK_FREQ=24576000
 )
+
+query_tools_version()
 
 foreach(FFVA_AP ${FFVA_PIPELINES_INT})
     #**********************
@@ -63,6 +64,7 @@ foreach(FFVA_AP ${FFVA_PIPELINES_INT})
     #**********************
     create_run_target(example_ffva_int_${FFVA_AP})
     create_debug_target(example_ffva_int_${FFVA_AP})
+    create_upgrade_img_target(example_ffva_int_${FFVA_AP} ${XTC_VERSION_MAJOR} ${XTC_VERSION_MINOR})
 
     #**********************
     # Create data partition support targets

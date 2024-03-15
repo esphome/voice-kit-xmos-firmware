@@ -35,6 +35,7 @@
 #define USB_VID         0x2886
 #define PRODUCT_STR     "ReSpeaker 2 Mics Array"
 #define VENDOR_STR      "Seeed Studio"
+#define FIRMWARE_VERSION 0x0202 // for usb firmware, start from v2.0.0
 
 //--------------------------------------------------------------------+
 // Device Descriptors
@@ -42,7 +43,7 @@
 tusb_desc_device_t const desc_device = {
     .bLength            = sizeof(tusb_desc_device_t),
     .bDescriptorType    = TUSB_DESC_DEVICE,
-    .bcdUSB             = 0x0201,   // For BOS descriptor! https://microchip.my.site.com/s/article/Does-a-USB2-1-Specification-Exist
+    .bcdUSB             = 0x0200,   // For BOS descriptor! https://microchip.my.site.com/s/article/Does-a-USB2-1-Specification-Exist
 
     .bDeviceClass       = TUSB_CLASS_UNSPECIFIED,
     .bDeviceSubClass    = TUSB_CLASS_UNSPECIFIED,
@@ -51,7 +52,7 @@ tusb_desc_device_t const desc_device = {
 
     .idVendor           = USB_VID,
     .idProduct          = USB_PID,
-    .bcdDevice          = 0x0001,
+    .bcdDevice          = FIRMWARE_VERSION,
 
     .iManufacturer      = 0x01,
     .iProduct           = 0x02,

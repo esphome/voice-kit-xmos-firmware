@@ -43,6 +43,7 @@
 #define USB_VID         0x2886
 #define PRODUCT_STR     "ReSpeaker 2 Mics Array"
 #define VENDOR_STR      "Seeed Studio"
+#define FIRMWARE_VERSION 0x0101 // for i2s firmware, start from v1.0.0
 
 //--------------------------------------------------------------------+
 // Device Descriptors
@@ -69,7 +70,7 @@ tusb_desc_device_t const desc_device =
 
     .idVendor           = USB_VID,
     .idProduct          = USB_PID,
-    .bcdDevice          = 0x0100,
+    .bcdDevice          = FIRMWARE_VERSION,
 
     .iManufacturer      = 0x01,
     .iProduct           = 0x02,

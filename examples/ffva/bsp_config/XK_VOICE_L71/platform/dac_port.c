@@ -28,9 +28,9 @@ int aic3204_reg_write(uint8_t reg, uint8_t val)
 void aic3204_codec_reset(void)
 {
     //  <!-- RST_DAC X0D32/8C6/output -->
-    const rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
-    rtos_gpio_port_enable(gpio_ctx_t0, gpo_port);
-    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, 1<<6);
+    rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
+    uint32_t val = rtos_gpio_port_in(gpio_ctx_t0, gpo_port);
+    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val |= (1<<6));
 }
 
 void aic3204_wait(uint32_t wait_ms)

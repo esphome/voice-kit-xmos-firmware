@@ -13,6 +13,9 @@
 // Page 0
 #define AIC3204_PAGE_CTRL     0x00 // Register 0  - Page Control
 #define AIC3204_SW_RST        0x01 // Register 1  - Software Reset
+#define AIC3204_CLK_PLL1      0x04 // Register 4  - Clock Setting Register 1, Multiplexers
+#define AIC3204_CLK_PLL2      0x05 // Register 5  - Clock Setting Register 2, P and R values
+#define AIC3204_CLK_PLL3      0x06 // Register 6  - Clock Setting Register 3, J values
 #define AIC3204_NDAC          0x0B // Register 11 - NDAC Divider Value
 #define AIC3204_MDAC          0x0C // Register 12 - MDAC Divider Value
 #define AIC3204_DOSR          0x0E // Register 14 - DOSR Divider Value (LS Byte)
@@ -27,6 +30,7 @@
 #define AIC3204_DAC_CH_SET2   0x40 // Register 64 - DAC Channel Setup 2
 #define AIC3204_DACL_VOL_D    0x41 // Register 65 - DAC Left Digital Vol Control
 #define AIC3204_DACR_VOL_D    0x42 // Register 66 - DAC Right Digital Vol Control
+#define AIC3204_DRC_ENABLE    0x44
 #define AIC3204_ADC_CH_SET    0x51 // Register 81 - ADC Channel Setup
 #define AIC3204_ADC_FGA_MUTE  0x52 // Register 82 - ADC Fine Gain Adjust/Mute
 

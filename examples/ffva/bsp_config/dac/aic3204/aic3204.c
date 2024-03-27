@@ -27,20 +27,33 @@ int aic3204_init(void)
 		// Program clock settings
 
 		// Default is CODEC_CLKIN is from MCLK pin. Don't need to change this.
-		// Power up NDAC and set to 1
-		aic3204_reg_write(AIC3204_NDAC, 0x81) == 0 &&
+		/*
+		// Enable PLL, MCLK is input to PLL
+		aic3204_reg_write(AIC3204_CLK_PLL1, 0x03) == 0 &&
+		// MCLK is 24.576MHz, R = 1, J = 4, D = 0, P = 3, PLL_CLK = MCLK * R * J.D / P
+		aic3204_reg_write(AIC3204_CLK_PLL2, 0xB1) == 0 &&
+		aic3204_reg_write(AIC3204_CLK_PLL3, 0x04) == 0 &&
+		// Power up NDAC and set to 4, or could we disable PLL and just set NDAC to 3? 
+		aic3204_reg_write(AIC3204_NDAC, 0x84) == 0 &&
 		// Power up MDAC and set to 4
 		aic3204_reg_write(AIC3204_MDAC, 0x84) == 0 &&
-        // Power up NADC and set to 1
-		aic3204_reg_write(AIC3204_NADC, 0x81) == 0 &&
-        // Power up MADC and set to 4
-	    aic3204_reg_write(AIC3204_MADC, 0x84) == 0 &&
+		*/
+		// Power up NDAC and set to 2
+		aic3204_reg_write(AIC3204_NDAC, 0x84) == 0 &&
+		// Power up MDAC and set to 6
+		aic3204_reg_write(AIC3204_MDAC, 0x86) == 0 &&
+        // // Power up NADC and set to 1
+		// aic3204_reg_write(AIC3204_NADC, 0x81) == 0 &&
+        // // Power up MADC and set to 4
+	    // aic3204_reg_write(AIC3204_MADC, 0x84) == 0 &&
 		// Program DOSR = 128
 		aic3204_reg_write(AIC3204_DOSR, 0x80) == 0 &&
-        // Program AOSR = 128
-        aic3204_reg_write(AIC3204_AOSR, 0x80) == 0 &&
-		// Set Audio Interface Config: I2S, 24 bits, slave mode, DOUT always driving.
-		aic3204_reg_write(AIC3204_CODEC_IF, 0x20) == 0 &&
+        // // Program AOSR = 128
+        // aic3204_reg_write(AIC3204_AOSR, 0x80) == 0 &&
+		// // Set Audio Interface Config: I2S, 24 bits, slave mode, DOUT always driving.
+		// aic3204_reg_write(AIC3204_CODEC_IF, 0x20) == 0 &&
+		// Set Audio Interface Config: I2S, 32 bits, slave mode, DOUT always driving.
+		aic3204_reg_write(AIC3204_CODEC_IF, 0x30) == 0 &&
 #if appconfUSB_ENABLED
 		// For USB Firmware only, 
 		aic3204_reg_write(54, 0x02) == 0 &&
@@ -74,10 +87,15 @@ int aic3204_init(void)
 		// Set the Left & Right DAC PowerTune mode to PTM_P3/4. Use Class-AB driver.
 		aic3204_reg_write(AIC3204_PLAY_CFG1, 0x00) == 0 &&
 		aic3204_reg_write(AIC3204_PLAY_CFG2, 0x00) == 0 &&
-		// Set ADC PowerTune mode PTM_R4.
-		aic3204_reg_write(AIC3204_ADC_PTM, 0x00) == 0 &&
-		// Set MicPGA startup delay to 3.1ms
-		aic3204_reg_write(AIC3204_AN_IN_CHRG, 0x31) == 0 &&
+		// // Set the Left & Right DAC PowerTune mode to PTM_P3/4. Use Class-D driver.
+		// aic3204_reg_write(AIC3204_PLAY_CFG1, 0xC0) == 0 &&
+		// aic3204_reg_write(AIC3204_PLAY_CFG2, 0xC0) == 0 &&
+
+		// // Set ADC PowerTune mode PTM_R4.
+		// aic3204_reg_write(AIC3204_ADC_PTM, 0x00) == 0 &&
+		// // Set MicPGA startup delay to 3.1ms
+		// aic3204_reg_write(AIC3204_AN_IN_CHRG, 0x31) == 0 &&
+		
 		// Set the REF charging time to 40ms
 		aic3204_reg_write(AIC3204_REF_STARTUP, 0x01) == 0 &&
 		// HP soft stepping settings for optimal pop performance at power up
@@ -93,14 +111,14 @@ int aic3204_init(void)
     	//Route Right DAC to LOR
     	aic3204_reg_write(0x0f, 0x08) == 0 &&
 		// We are using Line input with low gain for PGA so can use 40k input R but lets stick to 20k for now.
-		// Route IN2_L to LEFT_P with 20K input impedance
-		aic3204_reg_write(AIC3204_LPGA_P_ROUTE, 0x20) == 0 &&
-		// Route IN2_R to LEFT_M with 20K input impedance
-		aic3204_reg_write(AIC3204_LPGA_N_ROUTE, 0x20) == 0 &&
-		// Route IN1_R to RIGHT_P with 20K input impedance
-		aic3204_reg_write(AIC3204_RPGA_P_ROUTE, 0x80) == 0 &&
-		// Route IN1_L to RIGHT_M with 20K input impedance
-		aic3204_reg_write(AIC3204_RPGA_N_ROUTE, 0x20) == 0 &&
+		// // Route IN2_L to LEFT_P with 20K input impedance
+		// aic3204_reg_write(AIC3204_LPGA_P_ROUTE, 0x20) == 0 &&
+		// // Route IN2_R to LEFT_M with 20K input impedance
+		// aic3204_reg_write(AIC3204_LPGA_N_ROUTE, 0x20) == 0 &&
+		// // Route IN1_R to RIGHT_P with 20K input impedance
+		// aic3204_reg_write(AIC3204_RPGA_P_ROUTE, 0x80) == 0 &&
+		// // Route IN1_L to RIGHT_M with 20K input impedance
+		// aic3204_reg_write(AIC3204_RPGA_N_ROUTE, 0x20) == 0 &&
 		// Unmute HPL and set gain to 0dB
 		aic3204_reg_write(AIC3204_HPL_GAIN, 0x00) == 0 &&
 		// Unmute HPR and set gain to 0dB
@@ -131,6 +149,8 @@ int aic3204_init(void)
 		//
 		// Select Page 0
 		aic3204_reg_write(AIC3204_PAGE_CTRL, 0x00) == 0 &&
+		// Disable DRC
+		// aic3204_reg_write(AIC3204_DRC_ENABLE, 0x0F) == 0 &&
 		// Power up the Left and Right DAC Channels. Route Left data to Left DAC and Right data to Right DAC.
 		// DAC Vol control soft step 1 step per DAC word clock.
 		aic3204_reg_write(AIC3204_DAC_CH_SET1, 0xd4) == 0 &&

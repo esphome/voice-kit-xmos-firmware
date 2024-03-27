@@ -24,6 +24,21 @@
 
 extern void i2s_rate_conversion_enable(void);
 
+static void amplifier_disable()
+{
+    rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
+    uint32_t val = rtos_gpio_port_in(gpio_ctx_t0, gpo_port);
+    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val &= ~(1<<5));
+}
+
+static void amplifier_enable()
+{
+    //  <!-- AMP_ENABLE X0D31/8C5/output -->
+    rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
+    uint32_t val = rtos_gpio_port_in(gpio_ctx_t0, gpo_port);
+    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val |= (1<<5));
+}
+
 static void gpio_start(void)
 {
     rtos_gpio_rpc_config(gpio_ctx_t0, appconfGPIO_T0_RPC_PORT, appconfGPIO_RPC_PRIORITY);
@@ -31,6 +46,9 @@ static void gpio_start(void)
 
 #if ON_TILE(0)
     rtos_gpio_start(gpio_ctx_t0);
+    rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
+    rtos_gpio_port_enable(gpio_ctx_t0, gpo_port);
+    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, 0);
 #endif
 #if ON_TILE(1)
     rtos_gpio_start(gpio_ctx_t1);
@@ -159,4 +177,5 @@ void platform_start(void)
     mics_start();
     i2s_start();
     usb_start();
+    amplifier_enable();
 }

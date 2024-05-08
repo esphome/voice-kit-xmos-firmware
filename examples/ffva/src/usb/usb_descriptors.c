@@ -43,7 +43,7 @@
 #define USB_VID         0x2886
 #define PRODUCT_STR     "ReSpeaker 2 Mics Array"
 #define VENDOR_STR      "Seeed Studio"
-#define FIRMWARE_VERSION 0x0102 // for i2s firmware, start from v1.0.0
+#define FIRMWARE_VERSION 0x0103 // for i2s firmware, start from v1.0.0
 
 //--------------------------------------------------------------------+
 // Device Descriptors

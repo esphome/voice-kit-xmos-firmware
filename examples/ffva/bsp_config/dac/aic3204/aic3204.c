@@ -39,7 +39,7 @@ int aic3204_init(void)
 		aic3204_reg_write(AIC3204_MDAC, 0x84) == 0 &&
 		*/
 		// Power up NDAC and set to 2
-		aic3204_reg_write(AIC3204_NDAC, 0x84) == 0 &&
+		aic3204_reg_write(AIC3204_NDAC, 0x82) == 0 &&
 		// Power up MDAC and set to 6
 		aic3204_reg_write(AIC3204_MDAC, 0x86) == 0 &&
         // // Power up NADC and set to 1

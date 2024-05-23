@@ -19,11 +19,13 @@
 #include "app_conf.h"
 #include "platform/platform_init.h"
 #include "platform/driver_instances.h"
+#include "platform/platform_conf.h"
 #include "usb_support.h"
 // #include "usb_audio.h"
 #include "audio_pipeline.h"
-#include "ww_model_runner/ww_model_runner.h"
-#include "fs_support.h"
+// #include "ww_model_runner/ww_model_runner.h"
+// #include "fs_support.h"
+#include "dfu_servicer.h"
 
 #include "gpio_test/gpio_test.h"
 
@@ -347,16 +349,34 @@ void startup_task(void *arg)
     gpio_test(gpio_ctx_t0);
 #endif
 
-    audio_pipeline_init(NULL, NULL);
+#if appconfI2C_DFU_ENABLED && ON_TILE(I2C_CTRL_TILE_NO)
+    // Initialise control related things
+    servicer_t servicer_dfu;
+    dfu_servicer_init(&servicer_dfu);
 
-#if ON_TILE(FS_TILE_NO)
+    xTaskCreate(
+        dfu_servicer,
+        "DFU servicer",
+        RTOS_THREAD_STACK_SIZE(dfu_servicer),
+        &servicer_dfu,
+        appconfDEVICE_CONTROL_I2C_PRIORITY,
+        NULL
+    );
+#endif
+
+#if appconfINTENT_ENABLED && ON_TILE(FS_TILE_NO)
     rtos_fatfs_init(qspi_flash_ctx);
-    rtos_dfu_image_print_debug(dfu_image_ctx);
+    // rtos_dfu_image_print_debug(dfu_image_ctx);
+    // Setup flash low-level mode
+    //   NOTE: must call rtos_qspi_flash_fast_read_shutdown_ll to use non low-level mode calls
+    rtos_qspi_flash_fast_read_setup_ll(qspi_flash_ctx);
 #endif
 
 #if appconfWW_ENABLED && ON_TILE(WW_TILE_NO)
     ww_task_create(appconfWW_TASK_PRIORITY);
 #endif
+
+    audio_pipeline_init(NULL, NULL);
 
     mem_analysis();
 }

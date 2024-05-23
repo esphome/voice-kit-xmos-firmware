@@ -120,6 +120,14 @@
 #endif /* appconfI2C_CTRL_ENABLED */
 #endif /* appconfEXTERNAL_MCLK */
 
+#ifndef appconfI2C_DFU_ENABLED
+#define appconfI2C_DFU_ENABLED 1
+#endif /* appconfI2C_DFU_ENABLED */
+
+#ifndef APP_CONTROL_TRANSPORT_COUNT
+#define APP_CONTROL_TRANSPORT_COUNT appconfI2C_DFU_ENABLED
+#endif /* APP_CONTROL_TRANSPORT_COUNT */ 
+
 #ifndef appconf_CONTROL_I2C_DEVICE_ADDR
 #define appconf_CONTROL_I2C_DEVICE_ADDR 0x42
 #endif /* appconf_CONTROL_I2C_DEVICE_ADDR*/
@@ -161,6 +169,10 @@
 #ifndef appconfSPI_TASK_PRIORITY
 #define appconfSPI_TASK_PRIORITY                (configMAX_PRIORITIES/2)
 #endif /* appconfSPI_TASK_PRIORITY */
+
+#ifndef appconfDEVICE_CONTROL_I2C_PRIORITY
+#define appconfDEVICE_CONTROL_I2C_PRIORITY      (configMAX_PRIORITIES-1)
+#endif // appconfDEVICE_CONTROL_I2C_PRIORITY
 
 /*****************************************/
 /*  DFU Settings                         */

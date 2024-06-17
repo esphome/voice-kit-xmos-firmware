@@ -50,6 +50,7 @@ static void gpio_start(void)
     rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
     rtos_gpio_port_enable(gpio_ctx_t0, gpo_port);
     rtos_gpio_port_out(gpio_ctx_t0, gpo_port, 0);
+    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, 1<<4); // set high to WS2812_PIN to give up control of WS2812
 #endif
 #if ON_TILE(1)
     rtos_gpio_start(gpio_ctx_t1);

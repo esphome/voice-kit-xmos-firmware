@@ -26,6 +26,7 @@
 // #include "ww_model_runner/ww_model_runner.h"
 // #include "fs_support.h"
 #include "dfu_servicer.h"
+#include "configuration_servicer.h"
 
 #include "gpio_test/gpio_test.h"
 
@@ -350,6 +351,18 @@ void startup_task(void *arg)
 #endif
 
 #if appconfI2C_DFU_ENABLED && ON_TILE(I2C_CTRL_TILE_NO)
+    servicer_t servicer_cfg;
+    configuration_servicer_init(&servicer_cfg);
+
+    xTaskCreate(
+        configuration_servicer,
+        "CFG servicer",
+        RTOS_THREAD_STACK_SIZE(configuration_servicer),
+        &servicer_cfg,
+        appconfDEVICE_CONTROL_I2C_PRIORITY,
+        NULL
+    );
+
     // Initialise control related things
     servicer_t servicer_dfu;
     dfu_servicer_init(&servicer_dfu);

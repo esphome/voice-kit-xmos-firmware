@@ -27,6 +27,9 @@
 #include "audio_pipeline.h"
 #include "audio_pipeline_dsp.h"
 
+/* configuration servicer */
+#include "configuration_servicer.h"
+
 #if appconfAUDIO_PIPELINE_FRAME_ADVANCE != 240
 #error This pipeline is only configured for 240 frame advance
 #endif
@@ -76,6 +79,9 @@ static void stage_vnr_and_ic(frame_data_t *frame_data)
 #if appconfAUDIO_PIPELINE_SKIP_IC_AND_VAD
 #else
     int32_t DWORD_ALIGNED ic_output[appconfAUDIO_PIPELINE_FRAME_ADVANCE];
+    // tile 0 pipeline, frame_data->samples[0] is mic0(Modified during call) and frame_data->samples[1] is mic1
+    // The performance of this filter has been optimised for a 71mm mic separation distance.
+    // int32_t samples[2][appconfAUDIO_PIPELINE_FRAME_ADVANCE];
     ic_filter(&ic_stage_state.state,
               frame_data->samples[0],
               frame_data->samples[1],
@@ -83,6 +89,7 @@ static void stage_vnr_and_ic(frame_data_t *frame_data)
 
     vnr_pred_state_t *vnr_pred_state = &vnr_pred_stage_state.vnr_pred_state;
     ic_calc_vnr_pred(&ic_stage_state.state, &vnr_pred_state->input_vnr_pred, &vnr_pred_state->output_vnr_pred);
+    configuration_set_vnr_value((int)(float_s32_to_float(vnr_pred_state->output_vnr_pred) * 100));
 
     float_s32_t agc_vnr_threshold = f32_to_float_s32(VNR_AGC_THRESHOLD);
     frame_data->vnr_pred_flag = float_s32_gt(vnr_pred_stage_state.vnr_pred_state.output_vnr_pred, agc_vnr_threshold);

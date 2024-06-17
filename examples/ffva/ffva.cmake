@@ -8,6 +8,7 @@ set(APP_INCLUDES
     # ${CMAKE_CURRENT_LIST_DIR}/src/ww_model_runner
     ${CMAKE_CURRENT_LIST_DIR}/src/control
     ${CMAKE_CURRENT_LIST_DIR}/src/dfu_int
+    ${CMAKE_CURRENT_LIST_DIR}/src/configuration
 )
 
 include(${CMAKE_CURRENT_LIST_DIR}/bsp_config/bsp_config.cmake)

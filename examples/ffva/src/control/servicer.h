@@ -4,7 +4,7 @@
 #include "device_control.h"
 #include "cmd_map.h"
 
-#define NUM_TILE_0_SERVICERS            (1) // only DFU servicer is used
+#define NUM_TILE_0_SERVICERS            (2) // DFU servicer and configuration servicer
 #define NUM_TILE_1_SERVICERS            (0) // no control servicer
 
 extern device_control_t *device_control_i2c_ctx;

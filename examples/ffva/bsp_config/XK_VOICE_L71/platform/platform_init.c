@@ -29,13 +29,18 @@ static void mclk_init(chanend_t other_tile_c)
 static void flash_init(void)
 {
 #if ON_TILE(FLASH_TILE_NO)
-    fl_QuadDeviceSpec qspi_spec = BOARD_QSPI_SPEC;
+    fl_QuadDeviceSpec qspi_spec = FL_QUADDEVICE_W25Q32JW;
     fl_QSPIPorts qspi_ports = {
         .qspiCS = PORT_SQI_CS,
         .qspiSCLK = PORT_SQI_SCLK,
         .qspiSIO = PORT_SQI_SIO,
         .qspiClkblk = FLASH_CLKBLK,
     };
+
+    // try to connect to spi flash and set the boot part
+    xassert(fl_connectToDevice(&qspi_ports, &qspi_spec, 1) == 0);
+    // We have 4MB SPI Flash, 2MB for firmware storage and 2MB for data storage
+    fl_setBootPartitionSize(0x200000);
 
     rtos_dfu_image_init(
             dfu_image_ctx,
@@ -50,6 +55,8 @@ static void flash_init(void)
             PORT_SQI_SCLK,
             PORT_SQI_SIO,
             NULL);
+
+    rtos_dfu_image_print_debug(dfu_image_ctx);
 #endif
 }
 

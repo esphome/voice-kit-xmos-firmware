@@ -21,6 +21,7 @@
 // #include "app_control/app_control.h"
 #include "servicer.h"
 #include "device_control_i2c.h"
+#include "configuration_common.h"
 // #endif
 
 extern void i2s_rate_conversion_enable(void);
@@ -63,6 +64,26 @@ static void flash_start(void)
     uint32_t flash_core_map = ~((1 << appconfUSB_INTERRUPT_CORE) | (1 << appconfUSB_SOF_INTERRUPT_CORE));
     rtos_qspi_flash_start(qspi_flash_ctx, appconfQSPI_FLASH_TASK_PRIORITY);
     rtos_qspi_flash_op_core_affinity_set(qspi_flash_ctx, flash_core_map);
+#endif
+}
+
+static void configuration_start(void)
+{
+#if ON_TILE(FLASH_TILE_NO)
+    configuration_init();
+    // read configuration
+    uint8_t *tmp_buf = rtos_osal_malloc( sizeof(uint8_t) * 16);
+    rtos_qspi_flash_read(
+        qspi_flash_ctx,
+        tmp_buf,
+        rtos_qspi_flash_size_get(qspi_flash_ctx) - 4096 * 2,
+        16);
+    for(uint8_t i = 0; i < 16; i++)
+    {
+        rtos_printf("0x%02X, ", tmp_buf[i]);
+    }
+    rtos_printf("\n");
+    rtos_osal_free(tmp_buf);
 #endif
 }
 
@@ -178,6 +199,8 @@ void platform_start(void)
     flash_start();
     i2c_master_start();
     // i2c_slave_start();
+    // read codec configuration from flash first
+    configuration_start();
     audio_codec_start();
     spi_start();
     mics_start();

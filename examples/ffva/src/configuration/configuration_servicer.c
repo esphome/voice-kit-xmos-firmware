@@ -12,9 +12,11 @@
 #include "platform/platform_conf.h"
 #include "servicer.h"
 #include "configuration_servicer.h"
-
+#include "configuration_common.h"
 
 static uint8_t vnr_value = 0;
+static int8_t headphone_volume = 0;
+static int8_t lineout_volume = 0;
 
 void configuration_servicer_init(servicer_t *servicer)
 {
@@ -64,29 +66,47 @@ void configuration_servicer(void *args) {
 control_ret_t configuration_servicer_read_cmd(control_resource_info_t *res_info, control_cmd_t cmd, uint8_t *payload, size_t payload_len)
 {
     control_ret_t ret = CONTROL_SUCCESS;
-    // uint8_t cmd_id = CONTROL_CMD_CLEAR_READ(cmd);
-    uint8_t cmd_id = cmd;
+    uint8_t cmd_id = CONTROL_CMD_CLEAR_READ(cmd);
+    int32_t value_i32 = 0;
+    float value_f = 0.0;
 
     memset(payload, 0, payload_len);
 
     // rtos_printf("configuration_servicer_read_cmd, cmd_id: %d.\n", cmd_id);
 
+    // For read commands, payload[0] is reserved from status.
     switch (cmd_id)
     {
-    case CONFIGURATION_SERVICER_RESID_VNR:
-    {
-        // rtos_printf("CONFIGURATION_SERVICER_RESID_VNR\n");
-        payload[0] = 0;
-        payload[1] = vnr_value;
+        case CONFIGURATION_SERVICER_RESID_VNR_VALUE:
+        {
+            // rtos_printf("CONFIGURATION_SERVICER_RESID_VNR\n");
+            value_i32 = vnr_value;
+            payload[0] = 0;
+            memcpy(payload + 1, &value_i32, sizeof(value_i32));
+        }
         break;
-    }
 
-    default:
-    {
-        // rtos_printf("CONFIGURATION_SERVICER UNHANDLED COMMAND!!!\n");
-        ret = CONTROL_BAD_COMMAND;
+        case CONFIGURATION_SERVICER_RESID_LINEOUT_VOLUME:
+        {
+            payload[0] = 0;
+            payload[1] = 0x11;
+        }
         break;
-    }
+
+        case CONFIGURATION_SERVICER_RESID_HEADPHONE_VOLUME:
+        {
+            payload[0] = 0;
+            payload[1] = 0x22;
+        }
+        break;
+
+        default:
+        {
+            // rtos_printf("CONFIGURATION_SERVICER UNHANDLED COMMAND!!!\n");
+            ret = CONTROL_BAD_COMMAND;
+            payload[0] = ret;
+        }
+        break;
     }
 
     return ret;
@@ -101,10 +121,23 @@ control_ret_t configuration_servicer_write_cmd(control_resource_info_t *res_info
 
     switch (cmd_id)
     {
+        case CONFIGURATION_SERVICER_RESID_LINEOUT_VOLUME:
+        {
+            
+        }
+        break;
 
-    default:
-        // rtos_printf("CONFIGURATION_SERVICER UNHANDLED COMMAND!!!\n");
-        ret = CONTROL_BAD_COMMAND;
+        case CONFIGURATION_SERVICER_RESID_HEADPHONE_VOLUME:
+        {
+
+        }
+        break;
+        
+        default:
+        {
+            // rtos_printf("CONFIGURATION_SERVICER UNHANDLED COMMAND!!!\n");
+            ret = CONTROL_BAD_COMMAND;
+        }
         break;
     }
 
@@ -116,4 +149,31 @@ void configuration_set_vnr_value(int value)
     if (value > 100) value = 100;
     if (value < 0) value = 0;
     vnr_value = value;
+}
+
+void configuration_set_headphone_volume(int8_t value)
+{
+
+}
+
+void configuration_get_headphone_volume(int8_t *value)
+{
+    *value = headphone_volume;
+}
+
+void configuration_set_lineout_volume(int8_t value)
+{
+
+}
+
+void configuration_get_lineout_volume(int8_t *value)
+{
+    *value = lineout_volume;
+}
+
+void configuration_read(uint8_t zone)
+{
+    configuration_t c;
+
+    configuration_read_from_flash(zone, )
 }

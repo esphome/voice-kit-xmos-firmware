@@ -33,9 +33,9 @@
 
 #define USB_PID         0x0019
 #define USB_VID         0x2886
-#define PRODUCT_STR     "ReSpeaker Lite"
+#define PRODUCT_STR     "ESPHome Voice Kit"
 #define VENDOR_STR      "Seeed Studio"
-#define FIRMWARE_VERSION 0x0205 // for usb firmware, start from v2.0.0
+#define FIRMWARE_VERSION 0x0210 // for usb firmware, start from v2.0.0
 
 //--------------------------------------------------------------------+
 // Device Descriptors

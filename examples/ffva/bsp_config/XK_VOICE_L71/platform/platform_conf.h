@@ -192,6 +192,60 @@
     0x01,                   /* QSPI_WIP_BIT_MASK */ \
 }
 
+#define FL_QUADDEVICE_W25Q64JV \
+{ \
+    0,                      /* Just specify 0 as flash_id */ \
+    256,                    /* page size */ \
+    16384,                  /* num pages */ \
+    3,                      /* address size */ \
+    4,                      /* log2 clock divider */ \
+    0x9F,                   /* QSPI_RDID */ \
+    0,                      /* id dummy bytes */ \
+    3,                      /* id size in bytes */ \
+    0xEF4016,               /* device id (determined from xflash --spi-read-id 0x9F)*/ \
+    0x20,                   /* QSPI_SE */ \
+    4096,                   /* Sector erase is always 4KB */ \
+    0x06,                   /* QSPI_WREN */ \
+    0x04,                   /* QSPI_WRDI */ \
+    PROT_TYPE_SR,           /* Protection via SR */ \
+    {{0x18,0x00},{0,0}},    /* QSPI_SP, QSPI_SU */ \
+    0x02,                   /* QSPI_PP */ \
+    0xEB,                   /* QSPI_READ_FAST */ \
+    1,                      /* 1 read dummy byte */ \
+    SECTOR_LAYOUT_REGULAR,  /* mad sectors */ \
+    {4096,{0,{0}}},         /* regular sector sizes */ \
+    0x05,                   /* QSPI_RDSR */ \
+    0x01,                   /* QSPI_WRSR */ \
+    0x01,                   /* QSPI_WIP_BIT_MASK */ \
+}
+
+#define FL_QUADDEVICE_ZB25VQ32D \
+{ \
+    0,                      /* Just specify 0 as flash_id */ \
+    256,                    /* page size */ \
+    16384,                  /* num pages */ \
+    3,                      /* address size */ \
+    4,                      /* log2 clock divider */ \
+    0x9F,                   /* QSPI_RDID */ \
+    0,                      /* id dummy bytes */ \
+    3,                      /* id size in bytes */ \
+    0x5E4016,               /* device id (determined from xflash --spi-read-id 0x9F)*/ \
+    0x20,                   /* QSPI_SE */ \
+    4096,                   /* Sector erase is always 4KB */ \
+    0x06,                   /* QSPI_WREN */ \
+    0x04,                   /* QSPI_WRDI */ \
+    PROT_TYPE_SR,           /* Protection via SR */ \
+    {{0x18,0x00},{0,0}},    /* QSPI_SP, QSPI_SU */ \
+    0x02,                   /* QSPI_PP */ \
+    0xEB,                   /* QSPI_READ_FAST */ \
+    1,                      /* 1 read dummy byte */ \
+    SECTOR_LAYOUT_REGULAR,  /* mad sectors */ \
+    {4096,{0,{0}}},         /* regular sector sizes */ \
+    0x05,                   /* QSPI_RDSR */ \
+    0x01,                   /* QSPI_WRSR */ \
+    0x01,                   /* QSPI_WIP_BIT_MASK */ \
+}
+
 #ifndef BOARD_QSPI_SPEC
 /* Set up a default SPI spec if the app has not provided
  * one explicitly.

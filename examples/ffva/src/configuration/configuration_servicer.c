@@ -173,7 +173,7 @@ void configuration_get_lineout_volume(int8_t *value)
 
 void configuration_read(uint8_t zone)
 {
-    configuration_t c;
+    // configuration_t c;
 
-    configuration_read_from_flash(zone, )
+    // configuration_read_from_flash(zone, )
 }

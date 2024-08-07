@@ -38,14 +38,14 @@ static void flash_init(void)
     };
 
     // try to connect to spi flash and set the boot part
-    xassert(fl_connectToDevice(&qspi_ports, &qspi_spec, 1) == 0);
+    xassert(fl_connectToDevice(&qspi_ports, qspi_spec, 2) == 0);
     // We have 4MB SPI Flash, 2MB for firmware storage and 2MB for data storage
     fl_setBootPartitionSize(0x200000);
 
     rtos_dfu_image_init(
             dfu_image_ctx,
             &qspi_ports,
-            &qspi_spec,
+            qspi_spec,
             2);
 
     rtos_qspi_flash_init(

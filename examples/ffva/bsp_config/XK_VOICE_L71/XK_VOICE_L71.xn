@@ -35,6 +35,16 @@
             <Port Location="XS1_PORT_1N"  Name="PORT_I2C_SCL"/>
             <Port Location="XS1_PORT_1O"  Name="PORT_I2C_SDA"/>
 
+            <!-- I2C2 ports -->
+            <Port Location="XS1_PORT_4F"  Name="PORT_I2C2_SCL"/>
+            <Port Location="XS1_PORT_4F"  Name="PORT_I2C2_SDA"/>
+
+            <!-- I2S2 ports -->
+            <Port Location="XS1_PORT_1M"  Name="PORT_MCLK2_IN_OUT"/>
+            <Port Location="XS1_PORT_1L"  Name="PORT_I2S2_BCLK"/>
+            <Port Location="XS1_PORT_1P"  Name="PORT_I2S2_LRCLK"/>
+            <Port Location="XS1_PORT_1D"  Name="I2S2_DATA"/>
+
             <!-- GPIO ports -->
             <Port Location="XS1_PORT_8C"  Name="PORT_GPO"/>
             <Port Location="XS1_PORT_8D"  Name="PORT_GPI"/>

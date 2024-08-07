@@ -48,6 +48,15 @@
 #define PORT_SPI_CS         PORT_SSB
 #define PORT_SPI_SCLK       PORT_SQI_SCLK_0
 
+/* Pin definitions */
+#define PIN_MUTE_DET_IN     (1<<4) /* PORT_GPI, x0d40, 8d4 */
+#define PIN_BUT_A_IN        (1<<5) /* PORT_GPI, x0d41, 8d5, not used */
+#define PIN_WS2812_OUT      (1<<6) /* PORT_GPI, x0d42, 8d6, not used */
+#define PIN_ESPIO40         (1<<7) /* PORT_GPI, x0d43, 8d7 */
+#define PIN_ESPIO33         (1<<7) /* PORT_GPO, x0d33, 8c7 */
+#define PIN_RST_DAC_OUT     (1<<6) /* PORT_GPO, x0d32, 8c6 */
+#define PIN_AMP_EN_OUT      (1<<5) /* PORT_GPO, x0d31, 8c5 */
+
 extern rtos_intertile_t *intertile_ctx;
 extern rtos_intertile_t *intertile_usb_audio_ctx;
 extern rtos_qspi_flash_t *qspi_flash_ctx;

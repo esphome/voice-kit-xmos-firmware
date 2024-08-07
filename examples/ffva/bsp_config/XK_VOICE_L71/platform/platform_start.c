@@ -30,7 +30,7 @@ static void amplifier_disable()
 {
     rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
     uint32_t val = rtos_gpio_port_in(gpio_ctx_t0, gpo_port);
-    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val &= ~(1<<5));
+    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val &= ~PIN_AMP_EN_OUT);
 }
 
 static void amplifier_enable()
@@ -38,7 +38,7 @@ static void amplifier_enable()
     //  <!-- AMP_ENABLE X0D31/8C5/output -->
     rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
     uint32_t val = rtos_gpio_port_in(gpio_ctx_t0, gpo_port);
-    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val |= (1<<5));
+    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val |= PIN_AMP_EN_OUT);
 }
 
 static void gpio_start(void)
@@ -51,7 +51,6 @@ static void gpio_start(void)
     rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
     rtos_gpio_port_enable(gpio_ctx_t0, gpo_port);
     rtos_gpio_port_out(gpio_ctx_t0, gpo_port, 0);
-    rtos_gpio_port_out(gpio_ctx_t0, gpo_port, 1<<4); // set high to WS2812_PIN to give up control of WS2812
 #endif
 #if ON_TILE(1)
     rtos_gpio_start(gpio_ctx_t1);

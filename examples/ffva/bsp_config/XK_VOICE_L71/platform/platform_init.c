@@ -29,7 +29,7 @@ static void mclk_init(chanend_t other_tile_c)
 static void flash_init(void)
 {
 #if ON_TILE(FLASH_TILE_NO)
-    fl_QuadDeviceSpec qspi_spec = FL_QUADDEVICE_W25Q32JW;
+    fl_QuadDeviceSpec qspi_spec[2] = {FL_QUADDEVICE_W25Q32JV, FL_QUADDEVICE_ZB25VQ32D};
     fl_QSPIPorts qspi_ports = {
         .qspiCS = PORT_SQI_CS,
         .qspiSCLK = PORT_SQI_SCLK,
@@ -46,7 +46,7 @@ static void flash_init(void)
             dfu_image_ctx,
             &qspi_ports,
             &qspi_spec,
-            1);
+            2);
 
     rtos_qspi_flash_init(
             qspi_flash_ctx,

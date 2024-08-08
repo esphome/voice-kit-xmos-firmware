@@ -166,8 +166,9 @@ int audio_pipeline_output(void *output_app_data,
         // tmp[j][1] = *(tmpptr+j+(5*frame_count));    // mic 1
 
         tmp[j][0] = *(tmpptr + j);    // for asr, proc0
-        tmp[j][1] = *(tmpptr + j);    // for asr, proc0
+        // tmp[j][1] = *(tmpptr + j);    // for asr, proc0
         // tmp[j][1] = *(tmpptr + j + 1 * frame_count);    // proc 1
+        tmp[j][1] = *(tmpptr+j+(2*frame_count));    // ref 0
 
         // TEST(jerry): 使用i2s时，直接输出两个麦克风的数据
         // tmp[j][0] = *(tmpptr+j+(4*frame_count));    // mic 0

@@ -15,6 +15,7 @@
 
 /* Library headers */
 #include "generic_pipeline.h"
+#include "ns_api.h"
 
 /* App headers */
 #include "app_conf.h"
@@ -30,6 +31,7 @@
 static stage_delay_ctx_t DWORD_ALIGNED delay_buf_state = {};
 #endif
 static aec_ctx_t DWORD_ALIGNED aec_state = {};
+static ns_stage_ctx_t DWORD_ALIGNED ns_stage_state = {};
 
 
 static void *audio_pipeline_input_i(void *input_app_data)
@@ -59,6 +61,20 @@ static int audio_pipeline_output_i(frame_data_t *frame_data,
                       frame_data,
                       sizeof(frame_data_t));
     return AUDIO_PIPELINE_FREE_FRAME;
+}
+
+static void stage_ns(frame_data_t *frame_data)
+{
+#if appconfAUDIO_PIPELINE_SKIP_NS
+#else
+    int32_t DWORD_ALIGNED ns_output[appconfAUDIO_PIPELINE_FRAME_ADVANCE];
+    configASSERT(NS_FRAME_ADVANCE == appconfAUDIO_PIPELINE_FRAME_ADVANCE);
+    ns_process_frame(
+                &ns_stage_state.state,
+                ns_output,
+                frame_data->samples[0]);
+    memcpy(frame_data->samples, ns_output, appconfAUDIO_PIPELINE_FRAME_ADVANCE * sizeof(int32_t));
+#endif
 }
 
 static void stage_delay(frame_data_t *frame_data)
@@ -146,20 +162,24 @@ static void initialize_pipeline_stages(void)
              AEC_MAX_X_CHANNELS,
              AEC_MAIN_FILTER_PHASES,
              AEC_SHADOW_FILTER_PHASES);
+
+    ns_init(&ns_stage_state.state);
 }
 
 void audio_pipeline_init(
     void *input_app_data,
     void *output_app_data)
 {
-    const int stage_count = 2;
+    const int stage_count = 3;
 
     const pipeline_stage_t stages[] = {
+        (pipeline_stage_t)stage_ns,
         (pipeline_stage_t)stage_delay,
         (pipeline_stage_t)stage_aec,
     };
 
     const configSTACK_DEPTH_TYPE stage_stack_sizes[] = {
+        configMINIMAL_STACK_SIZE + RTOS_THREAD_STACK_SIZE(stage_ns),
         configMINIMAL_STACK_SIZE + RTOS_THREAD_STACK_SIZE(stage_delay) + RTOS_THREAD_STACK_SIZE(audio_pipeline_input_i),
         configMINIMAL_STACK_SIZE + RTOS_THREAD_STACK_SIZE(stage_aec) + RTOS_THREAD_STACK_SIZE(audio_pipeline_output_i),
     };

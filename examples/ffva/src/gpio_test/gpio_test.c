@@ -15,6 +15,7 @@
 #define GPIO_PORT       PORT_GPI
 
 static int mute_status = -1;
+static int button_status = -1;
 
 #elif XCOREAI_EXPLORER
 #define BUTTON_0_BITMASK    0x01
@@ -66,6 +67,8 @@ static void gpio_handler(rtos_gpio_t *gpio_ctx)
         gpio_val = rtos_gpio_port_in(gpio_ctx, gpio_port);
 
 #if XK_VOICE_L71
+        gpio_val = gpio_val & GPIO_BITMASK;
+
         if (((gpio_val & BUTTON_MUTE_BITMASK) != 0) && (mute_status != 1)) {
             rtos_printf("Mute active\n");
             mute_status = 1;
@@ -74,8 +77,12 @@ static void gpio_handler(rtos_gpio_t *gpio_ctx)
             mute_status = 0;
         }
 
-        if ((gpio_val & BUTTON_BTN_BITMASK) == 0) {
+        if ((gpio_val & BUTTON_BTN_BITMASK) == 0 && button_status != 1) {
             rtos_printf("Button pressed\n");
+            button_status = 1;
+        } else if ((gpio_val & BUTTON_BTN_BITMASK) != 0 && button_status != 0) {
+            rtos_printf("Button released\n");
+            button_status = 0;
         }
 #elif XCOREAI_EXPLORER
         extern volatile int mic_from_usb;

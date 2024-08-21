@@ -137,14 +137,14 @@ static void i2c_slave_start(void)
 
 static void spi_start(void)
 {
-#if appconfSPI_OUTPUT_ENABLED && ON_TILE(SPI_OUTPUT_TILE_NO)
-    rtos_spi_slave_start(spi_slave_ctx,
-                         NULL,
-                         (rtos_spi_slave_start_cb_t) spi_slave_start_cb,
-                         (rtos_spi_slave_xfer_done_cb_t) spi_slave_xfer_done_cb,
-                         appconfSPI_INTERRUPT_CORE,
-                         appconfSPI_TASK_PRIORITY);
-#endif
+// #if appconfSPI_OUTPUT_ENABLED && ON_TILE(SPI_OUTPUT_TILE_NO)
+//     rtos_spi_slave_start(spi_slave_ctx,
+//                          NULL,
+//                          (rtos_spi_slave_start_cb_t) spi_slave_start_cb,
+//                          (rtos_spi_slave_xfer_done_cb_t) spi_slave_xfer_done_cb,
+//                          appconfSPI_INTERRUPT_CORE,
+//                          appconfSPI_TASK_PRIORITY);
+// #endif
 }
 
 static void mics_start(void)
@@ -163,7 +163,7 @@ static void i2s_start(void)
 {
 #if appconfI2S_ENABLED
 #if appconfI2S_MODE == appconfI2S_MODE_MASTER
-    rtos_i2s_rpc_config(i2s_ctx, appconfI2S_RPC_PORT, appconfI2S_RPC_PRIORITY);
+    rtos_i2s_rpc_config(i2s1_ctx, appconfI2S_RPC_PORT, appconfI2S_RPC_PRIORITY);
 #endif
 #if ON_TILE(I2S_TILE_NO)
     if (appconfI2S_AUDIO_SAMPLE_RATE == 3*appconfAUDIO_PIPELINE_SAMPLE_RATE) {
@@ -171,13 +171,33 @@ static void i2s_start(void)
     }
 
     rtos_i2s_start(
-            i2s_ctx,
+            i2s1_ctx,
             rtos_i2s_mclk_bclk_ratio(appconfAUDIO_CLOCK_FREQUENCY, appconfI2S_AUDIO_SAMPLE_RATE),
             I2S_MODE_I2S,
             2.2 * appconfAUDIO_PIPELINE_FRAME_ADVANCE,
             1.2 * appconfAUDIO_PIPELINE_FRAME_ADVANCE * (appconfI2S_TDM_ENABLED ? 3 : 1),
             appconfI2S_INTERRUPT_CORE);
 #endif
+#endif
+}
+
+static void i2s2_start(void)
+{
+    // don't need rpc
+    // rtos_i2s_rpc_config(i2s2_ctx, appconfI2S2_RPC_PORT, appconfI2S2_RPC_PRIORITY);
+
+#if ON_TILE(I2S2_TILE_NO)
+    rtos_i2s_start(
+            i2s2_ctx,
+            rtos_i2s_mclk_bclk_ratio(
+                appconfAUDIO_CLOCK_FREQUENCY,   //3.072M
+                // MIC_ARRAY_CONFIG_MCLK_FREQ,  // 24.576M
+                // appconfI2S_AUDIO_SAMPLE_RATE), // 48k
+                16000), // 16k
+            I2S_MODE_I2S,
+            2.2 * appconfAUDIO_PIPELINE_FRAME_ADVANCE,
+            1.2 * appconfAUDIO_PIPELINE_FRAME_ADVANCE * (appconfI2S_TDM_ENABLED ? 3 : 1),
+            appconfI2S2_INTERRUPT_CORE);
 #endif
 }
 
@@ -201,9 +221,10 @@ void platform_start(void)
     // read codec configuration from flash first
     configuration_start();
     audio_codec_start();
-    spi_start();
+    // spi_start();
     mics_start();
     i2s_start();
+    i2s2_start();
     usb_start();
     amplifier_enable();
     // I2C slave can be started only after i2c_master_start() is completed

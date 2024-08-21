@@ -21,11 +21,13 @@
 #define SPI_OUTPUT_TILE_NO 0
 #define MICARRAY_TILE_NO   1
 #define I2S_TILE_NO        1
+#define I2S2_TILE_NO       0
 
 /** TILE 0 Clock Blocks */
 #define FLASH_CLKBLK  XS1_CLKBLK_1
-// #define UNUSED_CLKBLK XS1_CLKBLK_2
+#define I2S2_CLKBLK   XS1_CLKBLK_2
 #define SPI_CLKBLK    XS1_CLKBLK_3
+#define MCLK_CLKBLK_0    XS1_CLKBLK_3
 #define XUD_CLKBLK_1  XS1_CLKBLK_4 /* Reserved for lib_xud */
 #define XUD_CLKBLK_2  XS1_CLKBLK_5 /* Reserved for lib_xud */
 
@@ -66,7 +68,8 @@ extern rtos_mic_array_t *mic_array_ctx;
 extern rtos_i2c_master_t *i2c_master_ctx;
 extern rtos_i2c_slave_t *i2c_slave_ctx;
 extern rtos_spi_slave_t *spi_slave_ctx;
-extern rtos_i2s_t *i2s_ctx;
+extern rtos_i2s_t *i2s1_ctx;
+extern rtos_i2s_t *i2s2_ctx;
 extern rtos_dfu_image_t *dfu_image_ctx;
 
 #endif /* DRIVER_INSTANCES_H_ */

@@ -25,11 +25,11 @@
             <Port Location="XS1_PORT_1C"  Name="PORT_SQI_SCLK_0"/>
             <Port Location="XS1_PORT_4B"  Name="PORT_SQI_SIO_0"/>
 
-            <!-- SPI ports -->
+            <!-- SPI ports
             <Port Location="XS1_PORT_1A"  Name="PORT_SSB"/>
             <Port Location="XS1_PORT_1C"  Name="PORT_SQI_SCLK_0"/>
             <Port Location="XS1_PORT_1D"  Name="PORT_SPI_MOSI"/>
-            <Port Location="XS1_PORT_1P"  Name="PORT_SPI_MISO"/>
+            <Port Location="XS1_PORT_1P"  Name="PORT_SPI_MISO"/> -->
 
             <!-- I2C ports -->
             <Port Location="XS1_PORT_1N"  Name="PORT_I2C_SCL"/>

@@ -24,6 +24,23 @@ static void mclk_init(chanend_t other_tile_c)
 #if appconfUSB_ENABLED && ON_TILE(USB_TILE_NO)
     adaptive_rate_adjust_init();
 #endif
+
+#if ON_TILE(I2S2_TILE_NO)
+    /*
+     * Configure the MCLK input port on tile 0.
+     * This is wired to appPLL/MCLK output from tile 1.
+     * It is set up to clock itself. This allows GETTS to
+     * be called on it to count its clock cycles. This
+     * count is used to adjust its frequency to match the
+     * USB host.
+   */
+
+    port_enable(PORT_MCLK2_IN_OUT);
+    clock_enable(MCLK_CLKBLK_0);
+    clock_set_source_port(MCLK_CLKBLK_0, PORT_MCLK2_IN_OUT);
+    port_set_clock(PORT_MCLK2_IN_OUT, MCLK_CLKBLK_0);
+    clock_start(MCLK_CLKBLK_0);
+#endif
 }
 
 static void flash_init(void)
@@ -136,16 +153,16 @@ static void i2c_init(void)
 
 static void spi_init(void)
 {
-#if appconfSPI_OUTPUT_ENABLED && ON_TILE(SPI_OUTPUT_TILE_NO)
-    rtos_spi_slave_init(spi_slave_ctx,
-                        (1 << appconfSPI_IO_CORE),
-                        SPI_CLKBLK,
-                        SPI_MODE_3,
-                        PORT_SPI_SCLK,
-                        PORT_SPI_MOSI,
-                        PORT_SPI_MISO,
-                        PORT_SPI_CS);
-#endif
+// #if appconfSPI_OUTPUT_ENABLED && ON_TILE(SPI_OUTPUT_TILE_NO)
+//     rtos_spi_slave_init(spi_slave_ctx,
+//                         (1 << appconfSPI_IO_CORE),
+//                         SPI_CLKBLK,
+//                         SPI_MODE_3,
+//                         PORT_SPI_SCLK,
+//                         PORT_SPI_MOSI,
+//                         PORT_SPI_MISO,
+//                         PORT_SPI_CS);
+// #endif
 }
 
 static void mics_init(void)
@@ -187,7 +204,7 @@ static void i2s_init(void)
     };
 
     rtos_i2s_master_init(
-            i2s_ctx,
+            i2s1_ctx,
             (1 << appconfI2S_IO_CORE),
             p_i2s_dout,
             1,
@@ -199,7 +216,7 @@ static void i2s_init(void)
             I2S_CLKBLK);
 
     rtos_i2s_rpc_host_init(
-            i2s_ctx,
+            i2s1_ctx,
             &i2s_rpc_config,
             client_intertile_ctx,
             1);
@@ -211,7 +228,7 @@ static void i2s_init(void)
             PORT_I2S_DAC_DATA
     };
     rtos_i2s_slave_init(
-            i2s_ctx,
+            i2s1_ctx,
             (1 << appconfI2S_IO_CORE),
             p_i2s_dout,
             1,
@@ -224,11 +241,48 @@ static void i2s_init(void)
 #else
 #if appconfI2S_MODE == appconfI2S_MODE_MASTER
     rtos_i2s_rpc_client_init(
-            i2s_ctx,
+            i2s1_ctx,
             &i2s_rpc_config,
             intertile_ctx);
 #endif
 #endif
+#endif
+}
+
+static void i2s2_init(void)
+{
+    // don't need rpc
+//    static rtos_driver_rpc_t i2s2_rpc_config;
+
+#if ON_TILE(I2S2_TILE_NO)
+    // rtos_intertile_t *client_intertile_ctx[1] = {intertile_ctx};
+    port_t p_i2s2_out[1] = {
+            I2S2_DATA
+    };
+
+    rtos_i2s2_master_init(
+        i2s2_ctx,
+        (1 << appconfI2S2_IO_CORE),
+        p_i2s2_out,
+        1,
+        NULL,
+        0,
+        PORT_I2S2_BCLK,
+        PORT_I2S2_LRCLK,
+        PORT_MCLK2_IN_OUT,
+        I2S2_CLKBLK);
+
+    // rtos_i2s2_rpc_host_init(
+    //         i2s2_ctx,
+    //         &i2s2_rpc_config,
+    //         client_intertile_ctx,
+    //         1);
+
+#else
+    // rtos_i2s2_rpc_client_init(
+    //         i2s2_ctx,
+    //         &i2s2_rpc_config,
+    //         intertile_ctx);
 #endif
 }
 
@@ -265,9 +319,10 @@ void platform_init(chanend_t other_tile_c)
     gpio_init();
     flash_init();
     i2c_init();
-    spi_init();
+    // spi_init();
     mics_init();
     i2s_init();
+    i2s2_init();
     usb_init();
     control_init();
 }

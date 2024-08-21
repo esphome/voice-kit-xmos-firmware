@@ -54,7 +54,7 @@ void i2s_slave_intertile(void *args) {
                 tmp,
                 bytes_received);
 
-        rtos_i2s_tx(i2s_ctx,
+        rtos_i2s_tx(i2s1_ctx,
                     (int32_t*) tmp,
                     appconfAUDIO_PIPELINE_FRAME_ADVANCE,
                     portMAX_DELAY);
@@ -129,7 +129,7 @@ void audio_pipeline_input(void *input_app_data,
         int32_t *tmpptr = (int32_t *)input_audio_frames;
 
         size_t rx_count =
-        rtos_i2s_rx(i2s_ctx,
+        rtos_i2s_rx(i2s1_ctx,
                     (int32_t*) tmp,
                     frame_count,
                     portMAX_DELAY);
@@ -175,7 +175,14 @@ int audio_pipeline_output(void *output_app_data,
 
     }
 
-    rtos_i2s_tx(i2s_ctx,
+    // // TEST(jerry): output mic data on i2s1
+    // rtos_i2s_tx(i2s1_ctx,
+    //             (int32_t*) tmp,
+    //             frame_count,
+    //             portMAX_DELAY);
+    
+    // TEST(jerry): output mic data on i2s2
+    rtos_i2s_tx(i2s2_ctx,
                 (int32_t*) tmp,
                 frame_count,
                 portMAX_DELAY);
@@ -196,7 +203,7 @@ int audio_pipeline_output(void *output_app_data,
         tdm_output[4] = *(tmpptr + i) | 0x1;                        // proc 0
         tdm_output[5] = *(tmpptr + i + frame_count) | 0x1;          // proc 1
 
-        rtos_i2s_tx(i2s_ctx,
+        rtos_i2s_tx(i2s1_ctx,
                     tdm_output,
                     appconfI2S_AUDIO_SAMPLE_RATE / appconfAUDIO_PIPELINE_SAMPLE_RATE,
                     portMAX_DELAY);
@@ -314,9 +321,9 @@ size_t i2s_send_downsample_cb(rtos_i2s_t *ctx, void *app_data, int32_t *i2s_fram
 void i2s_rate_conversion_enable(void)
 {
 #if !appconfI2S_TDM_ENABLED
-    rtos_i2s_send_filter_cb_set(i2s_ctx, i2s_send_upsample_cb, NULL);
+    rtos_i2s_send_filter_cb_set(i2s1_ctx, i2s_send_upsample_cb, NULL);
 #endif
-    rtos_i2s_receive_filter_cb_set(i2s_ctx, i2s_send_downsample_cb, NULL);
+    rtos_i2s_receive_filter_cb_set(i2s1_ctx, i2s_send_downsample_cb, NULL);
 }
 
 void vApplicationMallocFailedHook(void)

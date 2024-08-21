@@ -51,6 +51,15 @@
 #define appconfI2S_RPC_PRIORITY (configMAX_PRIORITIES-2)
 #endif /* appconfI2S_RPC_PRIORITY */
 
+// Not used
+// #ifndef appconfI2S2_RPC_PORT
+// #define appconfI2S2_RPC_PORT 15
+// #endif /* appconfI2S2_RPC_PORT */
+
+// #ifndef appconfI2S2_RPC_PRIORITY
+// #define appconfI2S2_RPC_PRIORITY (configMAX_PRIORITIES-2)
+// #endif /* appconfI2S2_RPC_PRIORITY */
+
 /*****************************************/
 /*  I/O and interrupt cores              */
 /*****************************************/

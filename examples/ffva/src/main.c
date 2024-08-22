@@ -326,6 +326,14 @@ void i2s_rate_conversion_enable(void)
     rtos_i2s_receive_filter_cb_set(i2s1_ctx, i2s_send_downsample_cb, NULL);
 }
 
+void i2s2_rate_conversion_enable(void)
+{
+#if !appconfI2S_TDM_ENABLED
+    rtos_i2s_send_filter_cb_set(i2s2_ctx, i2s_send_upsample_cb, NULL);
+#endif
+    rtos_i2s_receive_filter_cb_set(i2s2_ctx, i2s_send_downsample_cb, NULL);
+}
+
 void vApplicationMallocFailedHook(void)
 {
     rtos_printf("Malloc Failed on tile %d!\n", THIS_XCORE_TILE);

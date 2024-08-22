@@ -25,6 +25,8 @@
 // #endif
 
 extern void i2s_rate_conversion_enable(void);
+extern void i2s2_rate_conversion_enable(void);
+
 
 static void amplifier_disable()
 {
@@ -122,6 +124,7 @@ static void i2c_slave_start(void)
 {
 // #if appconfI2C_CTRL_ENABLED && ON_TILE(I2C_CTRL_TILE_NO)
 #if appconfI2C_DFU_ENABLED && ON_TILE(I2C_CTRL_TILE_NO)
+    // i2c_master_shutdown(&i2c_master_ctx->ctx); // It is better to deinit i2c master if we don't use it 
     rtos_i2c_slave_start(i2c_slave_ctx,
                          device_control_i2c_ctx,
                          (rtos_i2c_slave_start_cb_t) device_control_i2c_start_cb,
@@ -187,6 +190,11 @@ static void i2s2_start(void)
     // rtos_i2s_rpc_config(i2s2_ctx, appconfI2S2_RPC_PORT, appconfI2S2_RPC_PRIORITY);
 
 #if ON_TILE(I2S2_TILE_NO)
+
+    if (appconfI2S_AUDIO_SAMPLE_RATE == 3*appconfAUDIO_PIPELINE_SAMPLE_RATE) {
+        i2s2_rate_conversion_enable();
+    }
+
     rtos_i2s_start(
             i2s2_ctx,
             rtos_i2s_mclk_bclk_ratio(

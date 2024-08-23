@@ -332,9 +332,9 @@ void startup_task(void *arg)
                 NULL);
 #endif
 
-#if ON_TILE(1)
-    gpio_test(gpio_ctx_t0);
-#endif
+// #if ON_TILE(1)
+//     gpio_test(gpio_ctx_t0);
+// #endif
 
     audio_pipeline_init(NULL, NULL);
 

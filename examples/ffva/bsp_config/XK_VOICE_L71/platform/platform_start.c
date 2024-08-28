@@ -51,8 +51,16 @@ static void gpio_start(void)
 #if ON_TILE(0)
     rtos_gpio_start(gpio_ctx_t0);
     rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
+    rtos_gpio_port_id_t gpi_port = rtos_gpio_port(PORT_GPI);
+    // rtos_gpio_port_id_t i2c2_port = rtos_gpio_port(PORT_I2C2_SCL);
+
     rtos_gpio_port_enable(gpio_ctx_t0, gpo_port);
+    rtos_gpio_port_enable(gpio_ctx_t0, gpi_port);
+    // rtos_gpio_port_enable(gpio_ctx_t0, i2c2_port);
+
     rtos_gpio_port_out(gpio_ctx_t0, gpo_port, 0);
+    rtos_gpio_port_in(gpio_ctx_t0, gpi_port);
+    // rtos_gpio_port_in(gpio_ctx_t0, i2c2_port);
 #endif
 #if ON_TILE(1)
     rtos_gpio_start(gpio_ctx_t1);
@@ -191,9 +199,9 @@ static void i2s2_start(void)
 
 #if ON_TILE(I2S2_TILE_NO)
 
-    if (appconfI2S_AUDIO_SAMPLE_RATE == 3*appconfAUDIO_PIPELINE_SAMPLE_RATE) {
-        i2s2_rate_conversion_enable();
-    }
+    // if (appconfI2S_AUDIO_SAMPLE_RATE == 3*appconfAUDIO_PIPELINE_SAMPLE_RATE) {
+    //     i2s2_rate_conversion_enable();
+    // }
 
     rtos_i2s_start(
             i2s2_ctx,

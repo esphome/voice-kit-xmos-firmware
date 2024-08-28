@@ -15,8 +15,6 @@
 #include "configuration_common.h"
 
 static uint8_t vnr_value = 0;
-static int8_t headphone_volume = 0;
-static int8_t lineout_volume = 0;
 
 void configuration_servicer_init(servicer_t *servicer)
 {
@@ -69,6 +67,7 @@ control_ret_t configuration_servicer_read_cmd(control_resource_info_t *res_info,
     uint8_t cmd_id = CONTROL_CMD_CLEAR_READ(cmd);
     int32_t value_i32 = 0;
     float value_f = 0.0;
+    uint8_t gpio_val;
 
     memset(payload, 0, payload_len);
 
@@ -80,25 +79,22 @@ control_ret_t configuration_servicer_read_cmd(control_resource_info_t *res_info,
         case CONFIGURATION_SERVICER_RESID_VNR_VALUE:
         {
             // rtos_printf("CONFIGURATION_SERVICER_RESID_VNR\n");
-            value_i32 = vnr_value;
             payload[0] = 0;
-            memcpy(payload + 1, &value_i32, sizeof(value_i32));
+            payload[1] = vnr_value;
         }
         break;
 
-        case CONFIGURATION_SERVICER_RESID_LINEOUT_VOLUME:
+        #if ON_TILE(0)
+        case CONFIGURATION_SERVICER_RESID_AMP_ENABLE:
         {
+            rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
+            gpio_val = rtos_gpio_port_in(gpio_ctx_t0, gpo_port);
             payload[0] = 0;
-            payload[1] = 0x11;
+            if ((gpio_val & 0xFF & PIN_AMP_EN_OUT) == 0) payload[1] = 0;
+            else payload[1] = 1;
         }
         break;
-
-        case CONFIGURATION_SERVICER_RESID_HEADPHONE_VOLUME:
-        {
-            payload[0] = 0;
-            payload[1] = 0x22;
-        }
-        break;
+        #endif
 
         default:
         {
@@ -115,24 +111,27 @@ control_ret_t configuration_servicer_read_cmd(control_resource_info_t *res_info,
 control_ret_t configuration_servicer_write_cmd(control_resource_info_t *res_info, control_cmd_t cmd, const uint8_t *payload, size_t payload_len)
 {
     control_ret_t ret = CONTROL_SUCCESS;
+    uint32_t val;
 
     uint8_t cmd_id = CONTROL_CMD_CLEAR_READ(cmd);
     // rtos_printf("configuration_servicer_write_cmd cmd_id %d.\n", cmd_id);
 
     switch (cmd_id)
     {
-        case CONFIGURATION_SERVICER_RESID_LINEOUT_VOLUME:
+        #if ON_TILE(0)
+        case CONFIGURATION_SERVICER_RESID_AMP_ENABLE:
         {
-            
+            if (payload_len == 1)
+            {
+                rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
+                val = rtos_gpio_port_in(gpio_ctx_t0, gpo_port);
+                if (payload[0] == 0) rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val &= ~PIN_AMP_EN_OUT);
+                else rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val |= PIN_AMP_EN_OUT);
+            }
         }
         break;
+        #endif
 
-        case CONFIGURATION_SERVICER_RESID_HEADPHONE_VOLUME:
-        {
-
-        }
-        break;
-        
         default:
         {
             // rtos_printf("CONFIGURATION_SERVICER UNHANDLED COMMAND!!!\n");
@@ -144,31 +143,11 @@ control_ret_t configuration_servicer_write_cmd(control_resource_info_t *res_info
     return ret;
 }
 
-void configuration_set_vnr_value(int value)
+void configuration_push_vnr_value(int value)
 {
     if (value > 100) value = 100;
     if (value < 0) value = 0;
     vnr_value = value;
-}
-
-void configuration_set_headphone_volume(int8_t value)
-{
-
-}
-
-void configuration_get_headphone_volume(int8_t *value)
-{
-    *value = headphone_volume;
-}
-
-void configuration_set_lineout_volume(int8_t value)
-{
-
-}
-
-void configuration_get_lineout_volume(int8_t *value)
-{
-    *value = lineout_volume;
 }
 
 void configuration_read(uint8_t zone)

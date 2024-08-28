@@ -89,7 +89,7 @@ static void stage_vnr_and_ic(frame_data_t *frame_data)
 
     vnr_pred_state_t *vnr_pred_state = &vnr_pred_stage_state.vnr_pred_state;
     ic_calc_vnr_pred(&ic_stage_state.state, &vnr_pred_state->input_vnr_pred, &vnr_pred_state->output_vnr_pred);
-    configuration_set_vnr_value((int)(float_s32_to_float(vnr_pred_state->output_vnr_pred) * 100));
+    configuration_push_vnr_value((int)(float_s32_to_float(vnr_pred_state->output_vnr_pred) * 100));
 
     float_s32_t agc_vnr_threshold = f32_to_float_s32(VNR_AGC_THRESHOLD);
     frame_data->vnr_pred_flag = float_s32_gt(vnr_pred_stage_state.vnr_pred_state.output_vnr_pred, agc_vnr_threshold);

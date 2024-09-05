@@ -364,10 +364,6 @@ void startup_task(void *arg)
                 NULL);
 #endif
 
-// #if ON_TILE(1)
-//     gpio_test(gpio_ctx_t0);
-// #endif
-
 #if appconfI2C_DFU_ENABLED && ON_TILE(I2C_CTRL_TILE_NO)
     servicer_t servicer_cfg;
     configuration_servicer_init(&servicer_cfg);

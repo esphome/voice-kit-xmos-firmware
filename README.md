@@ -1,10 +1,8 @@
 # voice-kit-xmos-firmware
 
-This repository holds the source code for the [esphome/voice-kit](https://github.com/esphome/voice-kit) XMOS microcontroller.
+This repository contains the source code for the [esphome/voice-kit](https://github.com/esphome/voice-kit) XU316 microcontroller.
 
 ## Building the firmware
-
-Steps to building the XMOS firmware for the VoiceKit.
 
 _NOTE: This guide was written using Debian Linux 12 (bookworm)_
 
@@ -21,7 +19,9 @@ On Linux:
 *   In a terminal, source the environment script (example: `source ~/XMOS/XTC/15.2.1/SetEnv` )
 *   If done correctly, run `xcc --version` and it should work
 
-  
+*Note:* This process is nearly identical for macOS -- just use the macOS version of the tools and install into `/Applications`.
+
+
 
 **Step 2:** clone the source repository.
 
@@ -57,7 +57,7 @@ make create_upgrade_img_example_ffva_int_fixed_delay
 
 **Step 4:** flash the firmware.
 
-Unplug the VoiceKit, switch the jumper on the VoiceKit to the XMOS chip, and plug it back in.
+Unplug the VoiceKit, change the switch on the VoiceKit to select the `XU316` and plug it back in.
 
 Ensure that you can see it with `dfu-util` (install if needed):
 

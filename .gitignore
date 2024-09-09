@@ -10,11 +10,9 @@
 
 # Build & debug cruft
 **/.build*/*
-**/bin/*
 *.o
 *.so*
 *.dylib
-*.xe
 *.vcd
 *.s
 *.xi
@@ -38,7 +36,6 @@
 .metadata
 *.gtkw
 *.swmem
-*.bin
 *.fs
 *.swp
 

@@ -44,7 +44,7 @@
 #define PRODUCT_STR     "ESPHome Voice Kit"
 #define VENDOR_STR      "Seeed Studio"
 // should same as APP_VERSION_MAJOR APP_VERSION_MINOR APP_VERSION_PATCH
-#define FIRMWARE_VERSION 0x0120 // for i2s firmware, start from v1.0.0
+#define FIRMWARE_VERSION 0x0121 // for i2s firmware, start from v1.0.0
 
 //--------------------------------------------------------------------+
 // Device Descriptors

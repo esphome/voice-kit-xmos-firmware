@@ -43,7 +43,7 @@ foreach(FFVA_AP ${FFVA_PIPELINES_UA})
     target_link_libraries(${TARGET_NAME}
         PUBLIC
             ${APP_COMMON_LINK_LIBRARIES}
-            sln_voice::app::ffva::xcore_ai_explorer
+            sln_voice::app::ffva::nc_voice_kit
             sln_voice::app::ffva::ap::${FFVA_AP}
     )
     target_link_options(${TARGET_NAME} PRIVATE ${APP_LINK_OPTIONS})
@@ -62,7 +62,7 @@ foreach(FFVA_AP ${FFVA_PIPELINES_UA})
     target_link_libraries(${TARGET_NAME}
         PUBLIC
             ${APP_COMMON_LINK_LIBRARIES}
-            sln_voice::app::ffva::xcore_ai_explorer
+            sln_voice::app::ffva::nc_voice_kit
             sln_voice::app::ffva::ap::${FFVA_AP}
     )
     target_link_options(${TARGET_NAME} PRIVATE ${APP_LINK_OPTIONS})

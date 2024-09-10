@@ -25,7 +25,7 @@ add_subdirectory(modules)
 
 ## Add top level project targets
 if(PROJECT_IS_TOP_LEVEL)
-    include(examples/examples.cmake)
+    include(src/ffva.cmake)
 endif()
 
 if(XCORE_VOICE_TESTS)

@@ -16,6 +16,9 @@
 
 static uint8_t vnr_value = 0;
 
+static enum e_pipeline_processing_stages channel_0_stage = PIPELINE_STAGE_AGC;
+static enum e_pipeline_processing_stages channel_1_stage = PIPELINE_STAGE_AEC;
+
 void configuration_servicer_init(servicer_t *servicer)
 {
     // Servicer resource info
@@ -83,19 +86,18 @@ control_ret_t configuration_servicer_read_cmd(control_resource_info_t *res_info,
             payload[1] = vnr_value;
         }
         break;
-
-        #if ON_TILE(0)
-        case CONFIGURATION_SERVICER_RESID_AMP_ENABLE:
+        case CONFIGURATION_SERVICER_RESID_CHANNEL_0_STAGE:
         {
-            rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
-            gpio_val = rtos_gpio_port_in(gpio_ctx_t0, gpo_port);
             payload[0] = 0;
-            if ((gpio_val & 0xFF & PIN_AMP_EN_OUT) == 0) payload[1] = 0;
-            else payload[1] = 1;
+            payload[1] = channel_0_stage;
         }
         break;
-        #endif
-
+        case CONFIGURATION_SERVICER_RESID_CHANNEL_1_STAGE:
+        {
+            payload[0] = 0;
+            payload[1] = channel_1_stage;
+        }
+        break;
         default:
         {
             // rtos_printf("CONFIGURATION_SERVICER UNHANDLED COMMAND!!!\n");
@@ -118,20 +120,22 @@ control_ret_t configuration_servicer_write_cmd(control_resource_info_t *res_info
 
     switch (cmd_id)
     {
-        #if ON_TILE(0)
-        case CONFIGURATION_SERVICER_RESID_AMP_ENABLE:
+        case CONFIGURATION_SERVICER_RESID_CHANNEL_0_STAGE:
         {
             if (payload_len == 1)
             {
-                rtos_gpio_port_id_t gpo_port = rtos_gpio_port(PORT_GPO);
-                val = rtos_gpio_port_in(gpio_ctx_t0, gpo_port);
-                if (payload[0] == 0) rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val &= ~PIN_AMP_EN_OUT);
-                else rtos_gpio_port_out(gpio_ctx_t0, gpo_port, val |= PIN_AMP_EN_OUT);
+                channel_0_stage = payload[0];
             }
         }
         break;
-        #endif
-
+        case CONFIGURATION_SERVICER_RESID_CHANNEL_1_STAGE:
+        {
+            if (payload_len == 1)
+            {
+                channel_1_stage = payload[0];
+            }
+        }
+        break;
         default:
         {
             // rtos_printf("CONFIGURATION_SERVICER UNHANDLED COMMAND!!!\n");
@@ -148,6 +152,16 @@ void configuration_push_vnr_value(int value)
     if (value > 100) value = 100;
     if (value < 0) value = 0;
     vnr_value = value;
+}
+
+enum e_pipeline_processing_stages configuration_get_channel_0_stage()
+{
+    return channel_0_stage;
+}
+
+enum e_pipeline_processing_stages configuration_get_channel_1_stage()
+{
+    return channel_1_stage;
 }
 
 void configuration_read(uint8_t zone)

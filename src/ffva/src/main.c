@@ -160,19 +160,48 @@ int audio_pipeline_output(void *output_app_data,
     int32_t *tmpptr = (int32_t *)output_audio_frames;
     for (int j=0; j<frame_count; j++) {
         /* ASR output is first */
-        // tmp[j][0] = *(tmpptr+j+(2*frame_count));    // ref 0
-        // tmp[j][1] = *(tmpptr+j+(3*frame_count));    // ref 1
+        // tmp[j][0] = *(tmpptr+j);                    // proc 0, AGC audio
+        // tmp[j][1] = *(tmpptr+j+(1*frame_count))     // proc 1, mic 1 audio with AEC applied
+        // tmp[j][0] = *(tmpptr+j+(2*frame_count));    // ref 0, overwritten by IC audio
+        // tmp[j][1] = *(tmpptr+j+(3*frame_count));    // ref 1, overwritten by NS audio
         // tmp[j][0] = *(tmpptr+j+(4*frame_count));    // mic 0
         // tmp[j][1] = *(tmpptr+j+(5*frame_count));    // mic 1
 
-        tmp[j][0] = *(tmpptr + j);    // for asr, proc0
-        /* tmp[j][1] = *(tmpptr + j);    // for asr, proc0 */
-        tmp[j][1] = *(tmpptr + j + 1 * frame_count);    // proc 1
+        enum e_pipeline_processing_stages channel_0_stage = configuration_get_channel_0_stage();
+        if (channel_0_stage == PIPELINE_STAGE_NONE) {
+            // Original microphone audio
+            tmp[j][0] = *(tmpptr + j + (4 * frame_count));
+        } else if (channel_0_stage == PIPELINE_STAGE_AEC) {
+            // AEC cancelled audio
+            tmp[j][0] = *(tmpptr + j + (1 * frame_count)); 
+        } else if (channel_0_stage == PIPELINE_STAGE_IC) {
+            // AEC+IC processed audio
+            tmp[j][0] = *(tmpptr + j + (2 * frame_count));
+        } else if (channel_0_stage == PIPELINE_STAGE_NS) {
+            // AEC+IC+NS processed audio
+            tmp[j][0] = *(tmpptr + j + (3 * frame_count));
+        } else if (channel_0_stage == PIPELINE_STAGE_AGC) {
+            // AEC+IC+NS+AGC processed audio
+            tmp[j][0] = *(tmpptr + j);
+        }
 
-        // TEST(jerry): 使用i2s时，直接输出两个麦克风的数据
-        // tmp[j][0] = *(tmpptr+j+(4*frame_count));    // mic 0
-        // tmp[j][1] = *(tmpptr+j+(5*frame_count));    // mic 1
-
+        enum e_pipeline_processing_stages channel_1_stage = configuration_get_channel_1_stage();
+        if (channel_1_stage == PIPELINE_STAGE_NONE) {
+            // Original microphone audio
+            tmp[j][1] = *(tmpptr + j + (5 * frame_count));
+        } else if (channel_1_stage == PIPELINE_STAGE_AEC) {
+            // AEC cancelled audio
+            tmp[j][1] = *(tmpptr + j + (1 * frame_count)); 
+        } else if (channel_1_stage == PIPELINE_STAGE_IC) {
+            // AEC+IC processed audio
+            tmp[j][1] = *(tmpptr + j + (2 * frame_count));
+        } else if (channel_1_stage == PIPELINE_STAGE_NS) {
+            // AEC+IC+NS processed audio
+            tmp[j][1] = *(tmpptr + j + (3 * frame_count));
+        } else if (channel_1_stage == PIPELINE_STAGE_AGC) {
+            // AEC+IC+NS+AGC processed audio
+            tmp[j][1] = *(tmpptr + j);
+        }
     }
 
     // // TEST(jerry): output mic data on i2s1

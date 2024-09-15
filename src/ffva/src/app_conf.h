@@ -14,10 +14,10 @@
 #define APP_VERSION_MAJOR   1
 #endif
 #ifndef APP_VERSION_MINOR
-#define APP_VERSION_MINOR   2
+#define APP_VERSION_MINOR   3
 #endif
 #ifndef APP_VERSION_PATCH
-#define APP_VERSION_PATCH   1
+#define APP_VERSION_PATCH   0
 #endif
 
 /* Intertile port settings */

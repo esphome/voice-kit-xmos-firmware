@@ -17,7 +17,7 @@
 #define APP_VERSION_MINOR   3
 #endif
 #ifndef APP_VERSION_PATCH
-#define APP_VERSION_PATCH   0
+#define APP_VERSION_PATCH   1
 #endif
 
 /* Intertile port settings */

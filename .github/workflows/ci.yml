@@ -95,7 +95,7 @@ jobs:
     if: needs.event_configuration.outputs.is_release == 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744  # v3.6.0
         with:
           fetch-depth: 1
           submodules: recursive
@@ -116,7 +116,7 @@ jobs:
           zip -r --symlinks $RELEASE_SOURCES_DIR/${{ needs.event_configuration.outputs.src_artifact_name }}.zip .
 
       - name: Upload sources
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1
         with:
           name: ${{ needs.event_configuration.outputs.src_artifact_name }}
           path: ${{ env.RELEASE_SOURCES_DIR }}

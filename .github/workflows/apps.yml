@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744  # v3.6.0
         with:
           submodules: recursive
 
@@ -53,7 +53,7 @@ jobs:
           docker run --rm -u $(id -u):$(id -g) -w /sln_voice -v ${{github.workspace}}:/sln_voice ${XCORE_BUILDER} bash -l tools/ci/build_host_apps.sh
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1
         with:
           name: ${{ env.HOST_APPS_ARTIFACT_NAME }}
           path: ./dist_host
@@ -64,7 +64,7 @@ jobs:
     needs: build_host_apps
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744  # v3.6.0
         with:
           submodules: recursive
 
@@ -73,7 +73,7 @@ jobs:
           docker pull ${XCORE_BUILDER}
 
       - name: Download host build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a  # v3.0.2
         with:
           name: ${{ env.HOST_APPS_ARTIFACT_NAME }}
           path: ./dist_host
@@ -93,7 +93,7 @@ jobs:
           fi
 
       - name: Save example app firmware artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1
         with:
           name: ${{ env.EXAMPLES_ARTIFACT_NAME }}
           path: |
@@ -106,7 +106,7 @@ jobs:
     needs: build_host_apps
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744  # v3.6.0
         with:
           submodules: recursive
 
@@ -115,7 +115,7 @@ jobs:
           docker pull ${XCORE_BUILDER}
 
       - name: Download host build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a  # v3.0.2
         with:
           name: ${{ env.HOST_APPS_ARTIFACT_NAME }}
           path: ./dist_host
@@ -131,7 +131,7 @@ jobs:
     needs: build_host_apps
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744  # v3.6.0
         with:
           submodules: recursive
 
@@ -140,7 +140,7 @@ jobs:
           docker pull ${XCORE_BUILDER}
 
       - name: Download host build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a  # v3.0.2
         with:
           name: ${{ env.HOST_APPS_ARTIFACT_NAME }}
           path: ./dist_host
@@ -157,7 +157,7 @@ jobs:
   #   needs: build_host_apps
   #   steps:
   #     - name: Checkout
-  #       uses: actions/checkout@v3
+  #       uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744  # v3.6.0
   #       with:
   #         submodules: recursive
 
@@ -166,7 +166,7 @@ jobs:
   #         docker pull ${XCORE_BUILDER}
 
   #     - name: Download host build artifacts
-  #       uses: actions/download-artifact@v3
+  #       uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a  # v3.0.2
   #       with:
   #         name: ${{ env.HOST_APPS_ARTIFACT_NAME }}
   #         path: ./dist_host
